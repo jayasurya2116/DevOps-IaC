@@ -1,1 +1,0 @@
-you can place custom Airflow plugins if your project requires any. Airflow plugins are Python modules that extend Airflow's functionality.
