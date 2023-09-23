@@ -1,0 +1,22 @@
+[
+  {
+    "ParameterKey": "ClientName",
+    "ParameterValue": "sampleclient"
+  },
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "prod"
+  },
+  {
+    "ParameterKey": "DBPassword",
+    "ParameterValue": "Test12"
+  },
+  {
+    "ParameterKey": "SMTPUser",
+    "ParameterValue": "AKIDFREWTYUSPX4NOW57"
+  },
+  {
+    "ParameterKey": "SMTPPassword",
+    "ParameterValue": "BJdUPs/ySdQ/0s1G473NLPM5Dx83GddrwE5T6YLw2CBBAn"
+  }
+]
