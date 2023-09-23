@@ -96,6 +96,22 @@ resource "aws_iam_role_policy_attachment" "mwaa_execution_role_policy_attachment
   role       = aws_iam_role.mwaa_execution_role.name
 }
 
+resource "aws_s3_bucket" "example_bucket" {
+  bucket = "Dataredshiftsurya" 
+  acl    = "private" 
+
+
+  versioning {
+    enabled = true
+  }
+
+ 
+  tags = {
+    Name = "MyExampleBucket"
+    Environment = "Development"
+  }
+}
+
 resource "aws_mwaa_web_login" "example_web_login" {
   name = aws_mwaa_environment.example_mwaa.name
 }
