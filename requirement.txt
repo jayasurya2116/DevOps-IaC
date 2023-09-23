@@ -1,0 +1,4 @@
+#Terraform
+#AWS CLI
+#AWS Redshift
+#AWS SecretsManager
