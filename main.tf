@@ -57,26 +57,46 @@ resource "aws_secretsmanager_secret_version" "redshift_connection" {
 }
 
 
-resource "aws_redshift_database" "example_database" {
-  cluster_identifier = aws_redshift_cluster.redshift_cluster.id
-  name              = "mydb" # Change this to your desired database name
-
- 
-  provisioner "local-exec" {
-    command = "psql -h ${aws_redshift_cluster.redshift_cluster.endpoint} -U ${aws_redshift_cluster.redshift_cluster.master_username} -d ${aws_redshift_database.example_database.name} -f create.sql"
-  }
-
-  depends_on = [aws_redshift_cluster.redshift_cluster]
-}
-
-
-resource "null_resource" "create_sql_file" {
-  triggers = {
-    content = file("${path.module}/create.sql")
+resource "aws_mwaa_environment" "example_mwaa" {
+  name          = "my-airflow-environment"
+  execution_role_arn = "arn:aws:iam::123456789012:role/service-role/AWSMWAAService-ExecutionRole"
+  max_workers   = 5
+  network_configuration {
+    security_group_ids = ["sg-0123456789abcdef0"]  
+    subnet_ids         = ["subnet-0123456789abcdef0"]  
   }
 }
 
-# Define a dependency between create_sql_file and aws_redshift_database to ensure SQL is executed after database creation
-resource "aws_redshift_database" "example_database" {
-  depends_on = [null_resource.create_sql_file]
+resource "aws_iam_policy_attachment" "mwaa_execution_role_policy" {
+  name       = "mwaa_execution_role_policy_attachment"
+  roles      = [aws_iam_role.mwaa_execution_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"  
 }
+
+resource "aws_iam_role" "mwaa_execution_role" {
+  name = "my-mwaa-execution-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "airflow.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "mwaa_execution_role_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonMWAAEnvironmentRole"  
+  role       = aws_iam_role.mwaa_execution_role.name
+}
+
+resource "aws_mwaa_web_login" "example_web_login" {
+  name = aws_mwaa_environment.example_mwaa.name
+}
+
