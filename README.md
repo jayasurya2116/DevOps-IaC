@@ -16,9 +16,9 @@ Please refer terraform code to get clear understanding
 
 Steps:
 
-terraform init
-terraform plan
-terraform apply
+1)terraform init
+2)terraform plan
+3)terraform apply
 
 If you want to delete the infrastructure, use
 terraform destroy
